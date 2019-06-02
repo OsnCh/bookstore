@@ -1,0 +1,14 @@
+{
+  "type": "mongodb",
+  "name": "NestMarketAnuitex",
+  "host": "nestmarketanuitex-btmfv.mongodb.net",
+  "port": 27017,
+  "username": "adminAnuitex",
+  "password": "5Bese4zt",
+  "database": "NestMarketAnuitex",
+  "entities": [
+    "src/**/**.entity{.ts,.js}"
+  ],
+  "synchronize": true,
+  "useNewUrlParser": true
+}

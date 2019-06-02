@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\common",
+    "\\src\\common\\exceptions",
+    "\\src\\common\\guards",
+    "\\src\\common\\middlewares",
+    "\\src\\controllers",
+    "\\src\\entities",
+    "\\src\\models",
+    "\\src\\services"
+  ],
+  "SelectedNode": "\\src\\services\\auth.service.ts",
+  "PreviewInSolutionExplorer": false
+}
