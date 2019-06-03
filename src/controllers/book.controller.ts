@@ -30,7 +30,7 @@ export class BookController{
     }
 
     @Post('add')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async addBook(@Body() model: AddBookModel): Promise<String>{
@@ -38,7 +38,7 @@ export class BookController{
     }
 
     @Post('update')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async updateBook(@Body() model: UpdateBookModel): Promise<String>{
@@ -46,7 +46,7 @@ export class BookController{
     }
 
     @Get('delete/:id')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async deleteBook(@Param('id') id:string){

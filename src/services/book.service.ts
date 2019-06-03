@@ -19,7 +19,7 @@ export class BookService{
         let newBook = this.bookRepository.create({
             price: model.price,
             name: model.name,
-            categoryId: new ObjectID(model.categoryId),
+            categoryId: model.categoryId,
             isActive: true,
             description: model.description
         })

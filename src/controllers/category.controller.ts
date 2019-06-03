@@ -16,7 +16,7 @@ export class CategoryController{
 
     @Post('add')
     @ApiOkResponse({ type: String })
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     async add(@Body() model: AddCategoryModel): Promise<String> {
         return await this.categoryService.addCategory(model);
@@ -31,7 +31,7 @@ export class CategoryController{
 
     @Get('delete/:id')
     @ApiOkResponse({type:String})
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     async delete(@Param('id') id: string):Promise<String>{
         return this.categoryService.deleteCategory(id);
@@ -39,7 +39,7 @@ export class CategoryController{
     
     @Post('update')
     @ApiOkResponse({type:String})
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     async update(model: UpdateCategoryModel): Promise<String>{
         return this.categoryService.updateCategory(model);

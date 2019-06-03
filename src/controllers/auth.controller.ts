@@ -7,7 +7,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { SignInAuthModel } from 'src/models/auth/signIn.model';
-import { Roles } from 'src/common';
+import { Roles, JwtAuthGuard } from 'src/common';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { UserRole } from 'src/entities';
 
@@ -30,7 +30,7 @@ export class AuthController {
   }
 
   @Get('users')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @ApiOkResponse({ type: TokenAuthModel, isArray: true })
   async getAll(): Promise<UserModel[]> {
