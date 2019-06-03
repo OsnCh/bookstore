@@ -1,14 +1,12 @@
 import { ApiModelProperty } from "@nestjs/swagger";
 
-export class GetCategoriesItemModel{
+export class AddMagazineModel{
     @ApiModelProperty()
-    id: string;
+    price: number;
+    @ApiModelProperty()
+    categoryId: string;
     @ApiModelProperty()
     name: string;
     @ApiModelProperty()
     description: string;
-    @ApiModelProperty()
-    booksCount: number;
-    @ApiModelProperty()
-    magazinesCount: number;
 }

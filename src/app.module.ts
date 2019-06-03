@@ -16,6 +16,9 @@ import { BookService } from "./services/book.service";
 import { CategoryService } from "./services/category.service";
 import { CategoryController } from "./controllers/category.controller";
 import { BookController } from "./controllers/book.controller";
+import { MagazineRepository } from "./repositories/magazine.repository";
+import { MagazineEntity } from "./entities/magazine.entity";
+import { MagazineService } from "./services/magazine.service";
 
 @Module({
   imports: [
@@ -28,14 +31,16 @@ import { BookController } from "./controllers/book.controller";
         username: "user",
         password: "user",
         database: "booksandmagazine",
-        entities: [UserEntity, BookEntity, CategoryEntity],
+        entities: [UserEntity, BookEntity, MagazineEntity, CategoryEntity],
         synchronize: true,
         useNewUrlParser: true, 
         w: 'majority',
         readPreference: 'primary'
       })
     }),
-    TypeOrmModule.forFeature([UserRepository, BookRepository, 
+    TypeOrmModule.forFeature([UserRepository, 
+      BookRepository, 
+      MagazineRepository,
       CategoryRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -45,11 +50,14 @@ import { BookController } from "./controllers/book.controller";
       },
     }),
   ],
-  controllers: [AuthController, CategoryController, BookController],
+  controllers: [AuthController, 
+    CategoryController, 
+    BookController],
   providers: [
     JwtStrategy,
     AuthService,
     BookService,
+    MagazineService,
     CategoryService
   ],
 })

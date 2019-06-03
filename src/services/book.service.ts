@@ -7,8 +7,8 @@ import * as Lodash  from 'lodash';
 import { GetBooksItemModel } from "src/models/book/getBooksItem.model";
 import { CategoryRepository } from "src/repositories/category.repository";
 import { UpdateBookModel } from "src/models/book/updateBook.model";
-import { GetBookSelectCategoryModel } from "src/models/book/getBookSelectCategory.model";
 import { BookEntity } from "src/entities/book.entity";
+import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
 
 @Injectable()
 export class BookService{
@@ -28,16 +28,14 @@ export class BookService{
         return "Book successfully added.";
     }  
 
-    async getAllBooks(isAdmin: boolean): Promise<GetBooksModel>{
+    async getAllBooks(isAdmin: boolean, categories: Array<GetSelectCategoryModel>): Promise<GetBooksModel>{
         let books = await this.bookRepository.find((isAdmin)?{}:{isActive: true});
-        let categories = await this.getCategories();
         let booksResponse = this.mapBooksArray(books, categories)
 
         return this.mapGetBooksResponse(booksResponse, categories);
     }
 
-    async getBooksByCategory(categoryId: string, isAdmin: boolean): Promise<GetBooksModel>{
-        let categories = await this.getCategories();
+    async getBooksByCategory(categoryId: string, isAdmin: boolean, categories: Array<GetSelectCategoryModel>): Promise<GetBooksModel>{
         let category = categories.find((categoryItem) => categoryItem.id == categoryId);
         if(!category){
             throw new Error('Category not found.');
@@ -50,21 +48,11 @@ export class BookService{
         return this.mapGetBooksResponse(booksResponse, categories);
     }
 
-    private async getCategories(): Promise<Array<GetBookSelectCategoryModel>>{
-        const categories = await this.categoryRepository.find();
-        return Lodash.map(categories, (category)=>{
-            let selectCategory = new GetBookSelectCategoryModel;
-            selectCategory.id = category.id;
-            selectCategory.name = category.name;
-            return selectCategory;
-        })
-    }
-
     private mapBooksArray(books: Array<BookEntity>, 
-        categories: Array<GetBookSelectCategoryModel> | GetBookSelectCategoryModel): Array<GetBooksItemModel>{
+        categories: Array<GetSelectCategoryModel> | GetSelectCategoryModel): Array<GetBooksItemModel>{
             let booksResponse = Lodash.map(books, (book) => {
                 let bookModel = new GetBooksItemModel;
-                bookModel.category = (categories instanceof GetBookSelectCategoryModel)?
+                bookModel.category = (categories instanceof GetSelectCategoryModel)?
                     categories : categories.find((category) => category.id == bookModel.id);
                 bookModel.description = book.description;
                 bookModel.id = book.id;
@@ -76,7 +64,7 @@ export class BookService{
     }
 
     private mapGetBooksResponse(books: Array<GetBooksItemModel>, 
-        categories: Array<GetBookSelectCategoryModel>): GetBooksModel{
+        categories: Array<GetSelectCategoryModel>): GetBooksModel{
             const response = new GetBooksModel;
             response.books = books;
             response.categories = categories;

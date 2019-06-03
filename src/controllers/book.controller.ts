@@ -8,25 +8,30 @@ import { UserRole } from "src/entities";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { AddBookModel } from "src/models/book/addBook.model";
 import { UpdateBookModel } from "src/models/book/updateBook.model";
+import { CategoryService } from "src/services/category.service";
 
 @ApiBearerAuth()
 @ApiUseTags('book')
 @Controller('book')
 export class BookController{
-    constructor(private bookService: BookService){}
+    constructor(private bookService: BookService,
+        private categoryService: CategoryService){}
 
     @Get('all')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({type: GetBooksModel})
     async getAllBooks(@User() user): Promise<GetBooksModel>{
-        return await this.bookService.getAllBooks(user.role == UserRole.ADMIN);
+        let categories = await this.categoryService.getCategoriesForSelect();
+        return await this.bookService.getAllBooks(user.role == UserRole.ADMIN, categories);
     }
 
     @Get('category/:id')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({type: GetBooksModel})
     async getBooksByCategoryId(@Param('id') categoryId: string, @User() user){
-        return await this.bookService.getBooksByCategory(categoryId, user.role == UserRole.ADMIN);
+        let categories = await this.categoryService.getCategoriesForSelect();
+        return await this.bookService.getBooksByCategory(categoryId, 
+            user.role == UserRole.ADMIN, categories);
     }
 
     @Post('add')
@@ -42,7 +47,7 @@ export class BookController{
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async updateBook(@Body() model: UpdateBookModel): Promise<String>{
-        return await this.updateBook(model);
+        return await this.bookService.updateBook(model);
     }
 
     @Get('delete/:id')
@@ -50,6 +55,6 @@ export class BookController{
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async deleteBook(@Param('id') id:string){
-        return await this.deleteBook(id);
+        return await this.bookService.deleteBook(id);
     }
 }

@@ -7,6 +7,7 @@ import * as Lodash  from 'lodash';
 import { GetCategoriesItemModel } from "src/models/category/getCategoriesItem.model";
 import { CategoryEntity } from "src/entities/category.entity";
 import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
+import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
 
 @Injectable()
 export class CategoryService{
@@ -49,6 +50,16 @@ export class CategoryService{
         response.categories = responseItems;
 
         return response;
+    }
+
+    async getCategoriesForSelect(): Promise<Array<GetSelectCategoryModel>>{
+        const categories = await this.categoryRepository.find();
+        return Lodash.map(categories, (category)=>{
+            let selectCategory = new GetSelectCategoryModel;
+            selectCategory.id = category.id;
+            selectCategory.name = category.name;
+            return selectCategory;
+        })
     }
 
     async deleteCategory(id: string): Promise<String>{

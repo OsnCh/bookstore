@@ -1,10 +1,8 @@
 import { ApiModelProperty } from "@nestjs/swagger";
 
-export class UpdateCategoryModel {
+export class GetSelectCategoryModel{
     @ApiModelProperty()
     id: string;
     @ApiModelProperty()
     name: string;
-    @ApiModelProperty()
-    description: string;
 }

@@ -1,13 +1,12 @@
-import { GetSelectCategoryModel } from "../category/getSelectCategory.model";
 import { ApiModelProperty } from "@nestjs/swagger";
 
-export class GetBooksItemModel{
+export class UpdateMagazineModel{
     @ApiModelProperty()
     id: string;
     @ApiModelProperty()
     price: number;
     @ApiModelProperty()
-    category: GetSelectCategoryModel;
+    categoryId: string;
     @ApiModelProperty()
     name: string;
     @ApiModelProperty()
