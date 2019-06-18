@@ -11,8 +11,8 @@ import { UpdateBookModel } from "src/models/book/updateBook.model";
 import { CategoryService } from "src/services/category.service";
 
 @ApiBearerAuth()
-@ApiUseTags('book')
-@Controller('book')
+@ApiUseTags('api/book')
+@Controller('api/book')
 export class BookController{
     constructor(private bookService: BookService,
         private categoryService: CategoryService){}
@@ -54,7 +54,15 @@ export class BookController{
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
-    async deleteBook(@Param('id') id:string){
+    async deleteBook(@Param('id') id:string): Promise<string>{
         return await this.bookService.deleteBook(id);
+    }
+
+    @Post('delete')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @ApiOkResponse({ type: String })
+    async deleteBooks(@Body() ids:Array<string>): Promise<string>{
+        return await this.bookService.deleteBooks(ids);
     }
 }

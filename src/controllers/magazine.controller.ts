@@ -11,8 +11,8 @@ import { AddMagazineModel } from "src/models/magazine/addMagazine.model";
 import { UpdateMagazineModel } from "src/models/magazine/updateMagazine.model";
 
 @ApiBearerAuth()
-@ApiUseTags('magazine')
-@Controller('magazine')
+@ApiUseTags('api/magazine')
+@Controller('api/magazine')
 export class MagazineController{
     constructor(private magazineService: MagazineService,
         private categoryService: CategoryService){}
@@ -56,5 +56,13 @@ export class MagazineController{
     @ApiOkResponse({ type: String })
     async deleteMagazine(@Param('id') id:string){
         return await this.magazineService.deleteMagazine(id);
+    }
+
+    @Post('delete')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @ApiOkResponse({ type: String })
+    async deleteMagazines(@Body() ids: Array<string>){
+        return await this.magazineService.deleteMany(ids);
     }
 }

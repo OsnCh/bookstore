@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ObjectIdColumn, ObjectID } from 'typeorm';
 import { EntityBase } from './base.entity';
+import { EmailService } from 'src/services/email.sevice';
 
 export enum UserRole {
     ADMIN = "admin",
@@ -25,6 +26,12 @@ export class UserEntity extends EntityBase {
 
     @Column()
     isActive: boolean;
+
+    @Column({ default: true })
+    isEmailConfirm: boolean;
+
+    @Column()
+    emailConfirmedToken: string;
 
     @Column({
         type: "enum",

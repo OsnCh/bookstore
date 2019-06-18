@@ -9,7 +9,7 @@ export class MagazineEntity extends EntityBase{
     description: string;
     @Column()
     price: number;
-    @Column()
+    @Column('string', { nullable: false })
     categoryId: ObjectID;
     @Column()
     isActive: boolean;

@@ -1,9 +1,6 @@
 export class ApplicationException extends Error {
-    status: number;
-    message: string;
-    constructor(status: number, message: string) {
-        super(message);
-        this.status = status;
+    constructor(message: string) {
+        super();
         this.message = message;
     }
 }

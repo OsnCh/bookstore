@@ -8,21 +8,22 @@ import { GetCategoriesItemModel } from "src/models/category/getCategoriesItem.mo
 import { CategoryEntity } from "src/entities/category.entity";
 import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
 import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
+import { MagazineRepository } from "src/repositories/magazine.repository";
+import { ApplicationException } from "src/common/exceptions/application.exception";
 
 @Injectable()
 export class CategoryService{
 
     constructor(private categoryRepository: CategoryRepository,
-        private bookRepository: BookRepository){
-
+        private bookRepository: BookRepository,
+        private magazineRepository: MagazineRepository){
     }
 
     async addCategory(model: AddCategoryModel): Promise<string>{
         let newCategory = new CategoryEntity;
         newCategory.name = model.name;
         newCategory.description = model.description;
-        console.log(newCategory);
-        this.categoryRepository.create(newCategory)
+        this.categoryRepository.create(newCategory);
         this.categoryRepository.save(newCategory);
 
         return "Category successfully added."
@@ -30,7 +31,6 @@ export class CategoryService{
 
     async getCategories(): Promise<GetCategoriesModel>{
         let categories = await this.categoryRepository.find({});
-        console.log(categories);
         let responseItems = Lodash.map(categories, (category) => {
             let responseItem = new GetCategoriesItemModel;
             responseItem.id = category.id.toString();
@@ -39,11 +39,12 @@ export class CategoryService{
             return responseItem;
         }) as Array<GetCategoriesItemModel>;
 
-        for(let i=0; i < responseItems.length; i++){
+        for(let i = 0; i < responseItems.length; i++){
             let responseItem = responseItems[i];
             responseItem.booksCount = (await this.bookRepository.
                 find({categoryId: responseItem.id })).length;
-            responseItem.magazinesCount = 0; //TODO: calculate count magazines by category
+            responseItem.magazinesCount = (await this.magazineRepository.
+                find({categoryId: responseItem.id})).length; 
         }
 
         let response = new GetCategoriesModel;
@@ -54,28 +55,20 @@ export class CategoryService{
 
     async getCategoriesForSelect(): Promise<Array<GetSelectCategoryModel>>{
         const categories = await this.categoryRepository.find();
-        return Lodash.map(categories, (category)=>{
-            let selectCategory = new GetSelectCategoryModel;
+
+        return Lodash.map(categories, (category) => {
+            const selectCategory = new GetSelectCategoryModel;
             selectCategory.id = category.id;
             selectCategory.name = category.name;
             return selectCategory;
         })
     }
 
-    async deleteCategory(id: string): Promise<String>{
-
-        //TODO: delete magazines
-        //TODO: find out about the transaction
-
-        /*let resultDeleteBooks = */await this.bookRepository.delete({categoryId: id});
-        // if(!resultDeleteBooks){
-        //     throw new Error("Delete books error");
-        // }
-        /*let resultDeleteCategory = */await this.categoryRepository.delete(id);
-        // if(!resultDeleteCategory){
-        //     throw new Error("Delete category error");
-        // }
-
+    async deleteCategory(id: string): Promise<string>{
+        await this.magazineRepository.delete({categoryId: id});
+        await this.bookRepository.delete({categoryId: id});
+        await this.categoryRepository.delete(id);
+        
         return "Category successfully delete."
     }
 

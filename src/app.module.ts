@@ -19,6 +19,9 @@ import { BookController } from "./controllers/book.controller";
 import { MagazineRepository } from "./repositories/magazine.repository";
 import { MagazineEntity } from "./entities/magazine.entity";
 import { MagazineService } from "./services/magazine.service";
+import { MagazineController } from "./controllers/magazine.controller";
+import { EmailService } from "./services/email.sevice";
+import { EmailJwtStrategy } from "./common/email-jwt.strategy";
 
 @Module({
   imports: [
@@ -52,16 +55,20 @@ import { MagazineService } from "./services/magazine.service";
   ],
   controllers: [AuthController, 
     CategoryController, 
-    BookController],
+    BookController,
+    MagazineController],
   providers: [
     JwtStrategy,
+    EmailJwtStrategy,
     AuthService,
     BookService,
     MagazineService,
-    CategoryService
+    CategoryService,
+    EmailService
   ],
 })
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply();
   }
 }

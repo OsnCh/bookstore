@@ -7,6 +7,7 @@ import * as Lodash  from 'lodash';
 import { GetMagazinesItemModel } from "src/models/magazine/getMagazinesItem.model";
 import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
 import { MagazineEntity } from "src/entities/magazine.entity";
+import { ApplicationException } from "src/common/exceptions/application.exception";
 
 @Injectable()
 export class MagazineService {
@@ -28,10 +29,11 @@ export class MagazineService {
         await this.magazineRepository.update(model.id, {
             price: model.price,
             categoryId: model.categoryId,
-            name: name,
+            name: model.name,
             description: model.description,
             isActive: model.isActive
         });
+
         return 'Magazine successfully update.'
     }
 
@@ -83,4 +85,10 @@ export class MagazineService {
             response.categories = categories;
             return response;
         }
+    
+    async deleteMany(ids: Array<string>): Promise<string>{
+        await this.magazineRepository.delete(ids);
+
+        return 'Magazines successfully delete.';
+    }
 }

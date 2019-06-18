@@ -9,6 +9,7 @@ import { CategoryRepository } from "src/repositories/category.repository";
 import { UpdateBookModel } from "src/models/book/updateBook.model";
 import { BookEntity } from "src/entities/book.entity";
 import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
+import { ApplicationException } from "src/common/exceptions/application.exception";
 
 @Injectable()
 export class BookService{
@@ -38,7 +39,7 @@ export class BookService{
     async getBooksByCategory(categoryId: string, isAdmin: boolean, categories: Array<GetSelectCategoryModel>): Promise<GetBooksModel>{
         let category = categories.find((categoryItem) => categoryItem.id == categoryId);
         if(!category){
-            throw new Error('Category not found.');
+            throw new ApplicationException('Category not found.');
         }
         let books = await this.bookRepository.find((isAdmin)?
             {categoryId: categoryId}:
@@ -53,11 +54,12 @@ export class BookService{
             let booksResponse = Lodash.map(books, (book) => {
                 let bookModel = new GetBooksItemModel;
                 bookModel.category = (categories instanceof GetSelectCategoryModel)?
-                    categories : categories.find((category) => category.id == bookModel.id);
+                    categories : categories.find((category) => category.id == book.categoryId);
                 bookModel.description = book.description;
                 bookModel.id = book.id;
                 bookModel.name = book.name;
                 bookModel.price = book.price;
+                bookModel.isActive = book.isActive;
                 return bookModel;
             }) as Array<GetBooksItemModel>;
             return booksResponse;
@@ -72,14 +74,19 @@ export class BookService{
     }
 
     async deleteBook(id: string): Promise<string>{
-        await this.bookRepository.delete({id: id});
+        let result = await this.bookRepository.delete(id);
         return "Book successfully delete."
     }
 
+    async deleteBooks(ids: Array<string>): Promise<string>{
+        let result = await this.bookRepository.delete(ids);
+        return "Books successfully delete."
+    }
+
     async updateBook(model: UpdateBookModel):Promise<string>{
-        await this.bookRepository.update(model.id, {
+        let result = await this.bookRepository.update(model.id, {
             price: model.price,
-            categoryId: new ObjectID(model.categoryId),
+            categoryId: model.categoryId,
             name: model.name,
             isActive: model.isActive,
             description: model.description
