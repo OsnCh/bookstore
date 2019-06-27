@@ -1,20 +1,21 @@
 import { Controller, Body, Post, Get, UseGuards, Param } from '@nestjs/common';
-import { AuthService } from '../services';
+import { AuthService } from 'src/services/auth.service';
 import {
   ApiBearerAuth,
   ApiUseTags,
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { SignInAuthModel } from 'src/models/auth/signIn.model';
-import { Roles, JwtAuthGuard, ExceptionHandlerFilter } from 'src/common';
+import { Roles, JwtAuthGuard } from 'src/common';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { UserRole } from 'src/entities';
+import { UserRole } from 'src/entities/user.entity';
 import { TokenAuthModel } from 'src/models/auth/tokenAuth.model';
 import { SignUpAuthModel } from 'src/models/auth/signUp.model';
 import { UserModel } from 'src/models/auth/user.model';
+import { SignInGoogleModel } from 'src/models/auth/signInGoogle.model';
 
 @ApiBearerAuth()
-@ApiUseTags('api/auth')
+@ApiUseTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -23,6 +24,18 @@ export class AuthController {
   @ApiOkResponse({ type: TokenAuthModel })
   async signIn(@Body() model: SignInAuthModel): Promise<TokenAuthModel> {
     return await this.authService.signIn(model);
+  }
+
+  @Post('signIn/google')
+  @ApiOkResponse({ type: TokenAuthModel})
+  async signInByGoogle(@Body() model: SignInGoogleModel): Promise<TokenAuthModel>{
+    return await this.authService.signInByGoogle(model);
+  }
+
+  @Get('signIn/facebook/:token')
+  @ApiOkResponse({type: TokenAuthModel})
+  async signInByFacebook(@Param('token') token: string): Promise<TokenAuthModel>{
+    return await this.authService.signInFacebook(token);
   }
 
   @Post('signUp')
@@ -44,4 +57,5 @@ export class AuthController {
   async emailConfirm(@Param('token') token: string): Promise<string>{
     return await this.authService.confirmEmail(token);
   }
+
 }

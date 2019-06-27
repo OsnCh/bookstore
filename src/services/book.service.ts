@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { BookRepository } from "src/repositories/book.repository";
 import { AddBookModel } from "src/models/book/addBook.model";
-import { ObjectID } from "typeorm";
 import { GetBooksModel } from "src/models/book/getBooks.model";
 import * as Lodash  from 'lodash';
 import { GetBooksItemModel } from "src/models/book/getBooksItem.model";
@@ -10,6 +9,7 @@ import { UpdateBookModel } from "src/models/book/updateBook.model";
 import { BookEntity } from "src/entities/book.entity";
 import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
 import { ApplicationException } from "src/common/exceptions/application.exception";
+import { GetBookModel } from "src/models/book/getBook.model";
 
 @Injectable()
 export class BookService{
@@ -27,7 +27,24 @@ export class BookService{
         this.bookRepository.save(newBook);
         
         return "Book successfully added.";
-    }  
+    } 
+    
+    async getBook(id: string): Promise<GetBookModel>{
+        let book = await this.bookRepository.findOne(id);
+        if(!book){
+            throw new ApplicationException('Book not found!')
+        }
+        let category = await this.categoryRepository.findOne(book.categoryId);
+        let bookModel = new GetBookModel;
+        bookModel.id = book.id.toString();
+        bookModel.price = book.price;
+        bookModel.name = book.name;
+        bookModel.description = book.description;
+        if(category){
+            bookModel.categoryName = category.name;
+        }
+        return bookModel;
+    }
 
     async getAllBooks(isAdmin: boolean, categories: Array<GetSelectCategoryModel>): Promise<GetBooksModel>{
         let books = await this.bookRepository.find((isAdmin)?{}:{isActive: true});

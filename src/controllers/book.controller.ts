@@ -4,25 +4,31 @@ import { BookService } from "src/services/book.service";
 import { GetBooksModel } from "src/models/book/getBooks.model";
 import { User } from "src/common/user.decorator";
 import { JwtAuthGuard, Roles } from "src/common";
-import { UserRole } from "src/entities";
+import { UserRole } from "src/entities/user.entity";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { AddBookModel } from "src/models/book/addBook.model";
 import { UpdateBookModel } from "src/models/book/updateBook.model";
 import { CategoryService } from "src/services/category.service";
+import { GetBookModel } from "src/models/book/getBook.model";
 
 @ApiBearerAuth()
-@ApiUseTags('api/book')
+@ApiUseTags('Book')
 @Controller('api/book')
 export class BookController{
     constructor(private bookService: BookService,
         private categoryService: CategoryService){}
 
     @Get('all')
-    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({type: GetBooksModel})
     async getAllBooks(@User() user): Promise<GetBooksModel>{
         let categories = await this.categoryService.getCategoriesForSelect();
-        return await this.bookService.getAllBooks(user.role == UserRole.ADMIN, categories);
+        return await this.bookService.getAllBooks(user && user.role == UserRole.ADMIN, categories);
+    }
+
+    @Get('/:id')
+    @ApiOkResponse({type: GetBookModel})
+    async getBook(@Param('id') id: string){
+        return await this.bookService.getBook(id);
     }
 
     @Get('category/:id')

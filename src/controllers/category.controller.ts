@@ -4,12 +4,12 @@ import { AddCategoryModel } from "src/models/category/addCategory.model";
 import { CategoryService } from "src/services/category.service";
 import { GetCategoriesModel } from "src/models/category/getCategories.model";
 import { Roles, JwtAuthGuard } from "src/common";
-import { UserRole } from "src/entities";
+import { UserRole } from "src/entities/user.entity";
 import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
 import { RolesGuard } from "src/common/guards/roles.guard";
 
 @ApiBearerAuth()
-@ApiUseTags('api/category')
+@ApiUseTags('Category')
 @Controller('api/category')
 export class CategoryController{
     constructor(private categoryService: CategoryService){}

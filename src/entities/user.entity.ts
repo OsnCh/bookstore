@@ -1,6 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { EntityBase } from './base.entity';
-import { EmailService } from 'src/services/email.sevice';
 
 export enum UserRole {
     ADMIN = "admin",
@@ -39,4 +38,10 @@ export class UserEntity extends EntityBase {
         default: UserRole.CLIENT
     })
     role: UserRole
+
+    @Column()
+    googleUserId: string;
+
+    @Column()
+    facebookUserId: string;
 }

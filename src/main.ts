@@ -9,9 +9,8 @@ async function bootstrap() {
   const port = process.env.PORT || 3001;
   const options = new DocumentBuilder()
     .setTitle('Books store')
-    .setDescription('Selling books and magazines')
+    .setDescription('WebAPI for selling books and magazines')
     .setVersion('1.0')
-    .addTag('books, magazines')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);

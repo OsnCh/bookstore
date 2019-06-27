@@ -22,6 +22,12 @@ import { MagazineService } from "./services/magazine.service";
 import { MagazineController } from "./controllers/magazine.controller";
 import { EmailService } from "./services/email.sevice";
 import { EmailJwtStrategy } from "./common/email-jwt.strategy";
+import { OrderRepository } from "./repositories/order.repository";
+import { OrderProductRepository } from "./repositories/orderProduct.repository";
+import { OrderEntity } from "./entities/order.entity";
+import { OrderProductEntity } from "./entities/orderProduct.entity";
+import { OrderController } from "./controllers/order.controller";
+import { OrderService } from "./services/order.service";
 
 @Module({
   imports: [
@@ -34,7 +40,7 @@ import { EmailJwtStrategy } from "./common/email-jwt.strategy";
         username: "user",
         password: "user",
         database: "booksandmagazine",
-        entities: [UserEntity, BookEntity, MagazineEntity, CategoryEntity],
+        entities: [UserEntity, BookEntity, MagazineEntity, CategoryEntity, OrderEntity, OrderProductEntity],
         synchronize: true,
         useNewUrlParser: true, 
         w: 'majority',
@@ -44,7 +50,9 @@ import { EmailJwtStrategy } from "./common/email-jwt.strategy";
     TypeOrmModule.forFeature([UserRepository, 
       BookRepository, 
       MagazineRepository,
-      CategoryRepository]),
+      CategoryRepository,
+      OrderRepository,
+      OrderProductRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secretOrPrivateKey: 'secretKey',
@@ -56,7 +64,8 @@ import { EmailJwtStrategy } from "./common/email-jwt.strategy";
   controllers: [AuthController, 
     CategoryController, 
     BookController,
-    MagazineController],
+    MagazineController,
+    OrderController],
   providers: [
     JwtStrategy,
     EmailJwtStrategy,
@@ -64,7 +73,8 @@ import { EmailJwtStrategy } from "./common/email-jwt.strategy";
     BookService,
     MagazineService,
     CategoryService,
-    EmailService
+    EmailService,
+    OrderService
   ],
 })
 export class ApplicationModule implements NestModule {

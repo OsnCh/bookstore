@@ -5,33 +5,42 @@ import { CategoryService } from "src/services/category.service";
 import { User } from "src/common/user.decorator";
 import { JwtAuthGuard, Roles } from "src/common";
 import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
-import { UserRole } from "src/entities";
+import { UserRole } from "src/entities/user.entity";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { AddMagazineModel } from "src/models/magazine/addMagazine.model";
 import { UpdateMagazineModel } from "src/models/magazine/updateMagazine.model";
+import { GetMagazineModel } from "src/models/magazine/getMagazine.model";
 
 @ApiBearerAuth()
-@ApiUseTags('api/magazine')
+@ApiUseTags('Magazine')
 @Controller('api/magazine')
 export class MagazineController{
     constructor(private magazineService: MagazineService,
         private categoryService: CategoryService){}
     
     @Get('all')
-    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({type: GetMagazinesModel})
     async getAllMagazines(@User() user): Promise<GetMagazinesModel>{
         let categories = await this.categoryService.getCategoriesForSelect();
-        return await this.magazineService.getAllMagazines(user.role == UserRole.ADMIN, categories);
+        return await this.magazineService.getAllMagazines(user && user.role == UserRole.ADMIN, categories);
     }
 
     @Get('category/:id')
-    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({type: GetMagazinesModel})
     async getMagazinesByCategoryId(@Param('id') categoryId: string, @User() user){
         let categories = await this.categoryService.getCategoriesForSelect();
         return await this.magazineService.getMagazinesByCategory(categoryId, 
-            user.role == UserRole.ADMIN, categories);
+            user && user.role == UserRole.ADMIN, categories);
+    }
+
+    @Get('/:id')
+    @ApiOkResponse({ type: GetMagazineModel })
+    async getMagazineById(@Param('id') id: string){
+        let categories = await this.categoryService.getCategoriesForSelect();
+        let response = new GetMagazineModel;
+        response.categories = categories;
+        response.magazine = await this.magazineService.getMagazineById(id, categories)
+        return response;
     }
 
     @Post('add')

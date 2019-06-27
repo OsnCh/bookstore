@@ -8,6 +8,7 @@ import { GetMagazinesItemModel } from "src/models/magazine/getMagazinesItem.mode
 import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
 import { MagazineEntity } from "src/entities/magazine.entity";
 import { ApplicationException } from "src/common/exceptions/application.exception";
+import { GetCategoriesItemModel } from "src/models/category/getCategoriesItem.model";
 
 @Injectable()
 export class MagazineService {
@@ -60,6 +61,23 @@ export class MagazineService {
 
             return this.mapGetResponse(magazineModels, categories);
         }
+
+    async getMagazineById(id: string, categories: Array<GetSelectCategoryModel>): Promise<GetMagazinesItemModel>{
+        let magazine = await this.magazineRepository.findOne(id);
+        if(!magazine){
+            throw new ApplicationException('Magazine not found!');
+        }
+
+        let magazineModel = new GetMagazinesItemModel;
+        magazineModel.id = magazine.id.toString();
+        magazineModel.category = categories.find(v => v.id == magazine.categoryId.toString());
+        magazineModel.description = magazine.description;
+        magazineModel.isActive = magazine.isActive;
+        magazineModel.name = magazine.name;
+        magazineModel.price = magazine.price;
+
+        return magazineModel;
+    }
     
     private mapGetMagazines(magazineEntities: Array<MagazineEntity>, 
         categories: Array<GetSelectCategoryModel> | GetSelectCategoryModel){

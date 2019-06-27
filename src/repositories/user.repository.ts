@@ -1,5 +1,5 @@
 import { BaseMongoRepository } from "./base.repository";
-import { UserEntity } from "src/entities";
+import { UserEntity } from "src/entities/user.entity";
 import { EntityRepository } from "typeorm/decorator/EntityRepository";
 
 @EntityRepository(UserEntity)
