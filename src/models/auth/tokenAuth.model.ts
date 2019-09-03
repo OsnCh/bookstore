@@ -4,4 +4,6 @@ export class TokenAuthModel {
     expiresIn: number;
     @ApiModelProperty()
     accessToken: string;
+    @ApiModelProperty()
+    isNewUser: boolean;
 }

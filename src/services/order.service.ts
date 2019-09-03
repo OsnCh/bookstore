@@ -49,7 +49,7 @@ export class OrderService {
         }
 
         let order = this.orderRepository.create({
-            userId: userId,
+            userId: userId.toString(),
             orderProductIds: orderProductIds.map(v => v.toString()),
             status: OrderStatus.WAITINGCONFIRMATION
         })
@@ -66,6 +66,15 @@ export class OrderService {
         await this.orderProductRepository.save(orderProduct);
         return orderProduct;
     }
+
+    /*
+    *It would be better if we store Full JSON object in the database
+    *  order: {
+    *    products: [],
+    *    amount: 312,
+    *    qty: 2
+    * }
+    */
 
     //#region get all orders
     async getAllOrders(): Promise<Array<GetOrderModel>> {
@@ -189,6 +198,63 @@ export class OrderService {
     async changeOrderStatus(id: string, status: OrderStatus): Promise<string>{
         await this.orderRepository.update(id, { status: status });
         return "Change status succefuly";
+    }
+
+    async getUserOrders(id: string): Promise<Array<GetOrderModel>>{
+        let orders = await this.orderRepository.find({userId: id.toString(), status: OrderStatus.CLOSED});
+        let orderProductIds = new Array<string>();
+        orders.forEach(v => orderProductIds.push(...v.orderProductIds.map(e => e.toString())))
+        let orderProducts = 
+            await this.orderProductRepository.findByIds(orderProductIds) as Array<OrderProductEntity>;
+        let bookIds = this.getProductIds(orderProducts.
+            filter(v => v.type == ProductType.BOOK))
+        let magazineIds = this.getProductIds(orderProducts.
+            filter(v => v.type == ProductType.MAGAZINE))
+        let books = await this.bookRepository.findByIds(bookIds) as Array<BookEntity>;
+        let magazines = await this.magazineRepository.findByIds(magazineIds) as Array<MagazineEntity>;
+
+        let categoryIds = new Array<string>();
+        categoryIds.push(...books.map(b => b.categoryId.toString()))
+        categoryIds.push(...magazines.map(m => m.categoryId.toString()))
+        let categories: Array<GetSelectCategoryModel> = (await this.categoryRepository.findByIds(categoryIds.filter(removeDublicate)))
+            .map(v => {
+                let category = new GetSelectCategoryModel
+                category.id = v.id.toString();
+                category.name = v.name;
+                return category;
+            });
+
+
+        let response = orders.map(order => {
+            let model = new GetOrderModel;
+            model.products = orderProducts.filter(orPr => order.orderProductIds.includes(orPr.id.toString()) && 
+                    (orPr.type == ProductType.BOOK) ? 
+                    books.find(v => v.id.toString() == orPr.productId) :
+                    magazines.find(v => v.id.toString() == orPr.productId))
+                .map(orPr => {
+                    let product = new GetOrderProductModel;
+                    product.type = orPr.type;
+                    product.count = orPr.count;
+                    product.id = orPr.id.toString();
+                    let productEntity = (product.type == ProductType.BOOK) ? 
+                        books.find(v => v.id.toString() == orPr.productId) :
+                        magazines.find(v => v.id.toString() == orPr.productId);
+                    product.product = (product.type == ProductType.BOOK)?
+                        new GetBooksItemModel : new GetMagazinesItemModel;
+                    product.product.category = categories.find(v => v.id == productEntity.categoryId.toString())
+                    product.product.name = productEntity.name;
+                    product.product.price = productEntity.price * orPr.count;
+                    product.product.description = productEntity.description;
+                    return product;
+                })
+            model.amount = this.getAmountByOrderModel(model);
+            return model;
+        }).filter(order => order.products.length > 0);
+        return response;
+    }
+
+    private getProductIds(orderProducts: Array<OrderProductEntity>){
+        return orderProducts.map(v => v.productId).filter(removeDublicate);
     }
     
 }

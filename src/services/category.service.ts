@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
 import { AddCategoryModel } from "src/models/category/addCategory.model";
 import { CategoryRepository } from "src/repositories/category.repository";
 import { GetCategoriesModel } from "src/models/category/getCategories.model";
@@ -9,9 +9,10 @@ import { CategoryEntity } from "src/entities/category.entity";
 import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
 import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
 import { MagazineRepository } from "src/repositories/magazine.repository";
-import { ApplicationException } from "src/common/exceptions/application.exception";
 
-@Injectable()
+@Injectable({
+    scope: Scope.REQUEST
+})
 export class CategoryService{
 
     constructor(private categoryRepository: CategoryRepository,
@@ -20,10 +21,13 @@ export class CategoryService{
     }
 
     async addCategory(model: AddCategoryModel): Promise<string>{
-        let newCategory = new CategoryEntity;
+        let newCategory = new CategoryEntity();
         newCategory.name = model.name;
         newCategory.description = model.description;
-        this.categoryRepository.create(newCategory);
+        this.categoryRepository.create({
+            name: model.name,
+            description: model.description
+        });
         this.categoryRepository.save(newCategory);
 
         return "Category successfully added."
@@ -57,7 +61,7 @@ export class CategoryService{
         const categories = await this.categoryRepository.find();
 
         return Lodash.map(categories, (category) => {
-            const selectCategory = new GetSelectCategoryModel;
+            const selectCategory = new GetSelectCategoryModel();
             selectCategory.id = category.id;
             selectCategory.name = category.name;
             return selectCategory;
@@ -73,7 +77,7 @@ export class CategoryService{
     }
 
     async updateCategory(model: UpdateCategoryModel): Promise<String>{
-        let result = await this.categoryRepository.update(model.id, 
+        await this.categoryRepository.update(model.id, 
             { name: model.name, description: model.description });
         return "Category successfully update."
     }

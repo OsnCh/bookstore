@@ -32,10 +32,10 @@ export class BookService{
     async getBook(id: string): Promise<GetBookModel>{
         let book = await this.bookRepository.findOne(id);
         if(!book){
-            throw new ApplicationException('Book not found!')
+            return null;
         }
         let category = await this.categoryRepository.findOne(book.categoryId);
-        let bookModel = new GetBookModel;
+        let bookModel = new GetBookModel();
         bookModel.id = book.id.toString();
         bookModel.price = book.price;
         bookModel.name = book.name;
@@ -91,17 +91,17 @@ export class BookService{
     }
 
     async deleteBook(id: string): Promise<string>{
-        let result = await this.bookRepository.delete(id);
+        await this.bookRepository.delete(id);
         return "Book successfully delete."
     }
 
     async deleteBooks(ids: Array<string>): Promise<string>{
-        let result = await this.bookRepository.delete(ids);
+        await this.bookRepository.delete(ids);
         return "Books successfully delete."
     }
 
     async updateBook(model: UpdateBookModel):Promise<string>{
-        let result = await this.bookRepository.update(model.id, {
+        await this.bookRepository.update(model.id, {
             price: model.price,
             categoryId: model.categoryId,
             name: model.name,
@@ -109,6 +109,6 @@ export class BookService{
             description: model.description
         });
 
-        return 'Book successfully update';
+        return 'Book is successfully updated';
     }
 }

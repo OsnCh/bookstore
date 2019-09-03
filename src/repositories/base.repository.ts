@@ -5,7 +5,6 @@ export class BaseMongoRepository<TEntity extends EntityBase> extends Repository<
 
     constructor(){
         super();
-       //super.create();
     }
 
     findBy = async (id: string | ObjectID) => {
@@ -14,16 +13,14 @@ export class BaseMongoRepository<TEntity extends EntityBase> extends Repository<
     }
 
     findByIds = async (ids: string[] | ObjectID[]) => {
-        const result = await this.findByIds(ids)
+        const result = new Array<TEntity>();
+        for(let i=0;i<ids.length;i++){
+            let id = ids[i];
+            let ent = await this.findOne(id.toString())
+            if(ent){
+                result.push(ent);
+            }
+        }
         return result;
     }
-
-    // create = async (item:  TEntity) => {
-    //     await this.insert(item);
-    //     await this.save();
-    // }
-
-    // getList = async () => {
-        
-    // }
 }

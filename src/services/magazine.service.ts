@@ -7,8 +7,6 @@ import * as Lodash  from 'lodash';
 import { GetMagazinesItemModel } from "src/models/magazine/getMagazinesItem.model";
 import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
 import { MagazineEntity } from "src/entities/magazine.entity";
-import { ApplicationException } from "src/common/exceptions/application.exception";
-import { GetCategoriesItemModel } from "src/models/category/getCategoriesItem.model";
 
 @Injectable()
 export class MagazineService {
@@ -65,7 +63,7 @@ export class MagazineService {
     async getMagazineById(id: string, categories: Array<GetSelectCategoryModel>): Promise<GetMagazinesItemModel>{
         let magazine = await this.magazineRepository.findOne(id);
         if(!magazine){
-            throw new ApplicationException('Magazine not found!');
+            return null;
         }
 
         let magazineModel = new GetMagazinesItemModel;
@@ -98,7 +96,7 @@ export class MagazineService {
 
     private mapGetResponse(magazines: Array<GetMagazinesItemModel>, 
         categories: Array<GetSelectCategoryModel>){
-            const response = new GetMagazinesModel;
+            const response = new GetMagazinesModel();
             response.magazines = magazines;
             response.categories = categories;
             return response;

@@ -16,7 +16,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
-  app.use
   await app.listen(port);
 }
 bootstrap();

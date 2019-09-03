@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SignInAuthModel } from 'src/models/auth/signIn.model';
 import { UserEntity, UserRole } from 'src/entities/user.entity';
@@ -11,8 +11,8 @@ import { ApplicationException } from 'src/common/exceptions/application.exceptio
 import { EmailService } from './email.sevice';
 import { EmailJwtStrategy } from 'src/common/email-jwt.strategy';
 import { SignInGoogleModel } from 'src/models/auth/signInGoogle.model';
-import { Facebook, FacebookApiException } from 'fb';
-import { Roles } from 'src/common';
+import { Facebook } from 'fb';
+import { environment } from 'src/environments/environment';
 
 function checkResponseFacebook(response, rejectObj) {
     if (response && !response.error) {
@@ -23,7 +23,9 @@ function checkResponseFacebook(response, rejectObj) {
     rejectObj();
 }
 
-@Injectable()
+@Injectable({
+    scope: Scope.REQUEST
+})
 export class AuthService {
 
     constructor(private readonly jwtService: JwtService,
@@ -35,12 +37,13 @@ export class AuthService {
 
     async signIn(model: SignInAuthModel): Promise<TokenAuthModel> {
         const user = await this.validateUser(model.email);
-        if (!user || Md5.hashAsciiStr(model.password) != user.passwordHash) {
+        if (!user || this.getHashPassowrd(model.password) != user.passwordHash) {
             throw new ApplicationException('User not found!')
         }
         return {
             expiresIn: 3600,
-            accessToken: this.getAccessToken(user)
+            accessToken: this.getAccessToken(user),
+            isNewUser: false
         };
     }
 
@@ -56,12 +59,14 @@ export class AuthService {
             payload = ticket.getPayload();
         } catch(error){
             console.log(error)
-            throw new ApplicationException('Google services error')
+            throw new ApplicationException('Google service error')
         }
         const userid = payload['sub'] as string;
 
         let appUser = await this.userRepository.findOne({ googleUserId: userid });
+        let isNewUser = false;
         if (!appUser) {
+            isNewUser = true;
             appUser = await this.signUpGoogle({
                 email: payload['email'],
                 firstName: payload['given_name'],
@@ -70,29 +75,38 @@ export class AuthService {
         }
         return {
             expiresIn: 3600,
-            accessToken: this.getAccessToken(appUser)
+            accessToken: this.getAccessToken(appUser),
+            isNewUser: isNewUser
         }
     }
 
     private async signUpGoogle(model: SignUpAuthModel, userGoogleId: string): Promise<UserEntity> {
+        await this.validateEmailForSignUp(model.email);
+        let pwd = this.generateRandomPassword();
         let user = this.userRepository.create({
             email: model.email,
             firstName: model.firstName,
             lastName: model.lastName,
             emailConfirmed: true,
             googleUserId: userGoogleId,
-            role: UserRole.CLIENT
+            role: UserRole.CLIENT,
+            passwordHash: this.getHashPassowrd(pwd).toString()
         });
+        let sendMessage = (async () =>
+            await this.emailService.sendUserPassword(model.email, 
+                `${model.firstName} ${model.lastName}`, pwd));
+        sendMessage();
         await this.userRepository.save(user);
         return user;
     }
 
     async signInFacebook(accessToken: string): Promise<TokenAuthModel> {
-        const fb = new Facebook({ version: 'v3.3' });
+        console.log('token', accessToken);
+        const fb = new Facebook({ version: environment.facebookData.apiVersion });
         let token = await new Promise<string>((resolve, reject) => {
             fb.api('oauth/access_token', {
-                client_id: '200824017475143',
-                client_secret: '23ab295cf12b2f954df3b250e27ce75d',
+                client_id: environment.facebookData.facebookClientId,
+                client_secret: environment.facebookData.facebookClientSecretKey,
                 grant_type: 'client_credentials'
             }, function (res) {
                 checkResponseFacebook(res, reject);
@@ -100,6 +114,7 @@ export class AuthService {
                 resolve(accessToken);
             })
         });
+        console.log('acces_token', accessToken);
         let userFacebookData = await new Promise<any>((resolve, reject) => {
             fb.api(`/debug_token?input_token=${accessToken}&access_token=${token}`,
                 function (response) {
@@ -107,36 +122,75 @@ export class AuthService {
                     resolve(response);
                 })
         });
+    
+        console.log('debug_token', userFacebookData);
+        let facebookApiError = new ApplicationException('Facebook api bad response');
         if(!userFacebookData.data.is_valid){
-            console.log(userFacebookData);
-            throw new ApplicationException('Facebook token not valid')
+            throw facebookApiError;
         }
         let facebookUserId = userFacebookData.data.user_id;
+
         let appUser = await this.userRepository.findOne({facebookUserId: facebookUserId});
+        let isNewUser = false;
         if(!appUser){
-            appUser = await this.signUpByFacebook(facebookUserId);
+            isNewUser = true;
+            let userScopeData = await new Promise<any>((resolve, reject) => {
+                fb.api(`/${facebookUserId}?fields=email,name`, 
+                { access_token : `${accessToken}` },
+                function(response) {
+                    resolve(response)
+                });
+            });
+            console.log('user_scope', userScopeData);
+            if(!userScopeData){
+                throw facebookApiError;
+            }    
+            appUser = await this.signUpByFacebook(facebookUserId, userScopeData.name, userScopeData.email);
         }
         return {
             expiresIn: 3600,
-            accessToken: this.getAccessToken(appUser)
+            accessToken: this.getAccessToken(appUser),
+            isNewUser: isNewUser
         }
     }
 
-    private async signUpByFacebook(facebookUserId: string): Promise<UserEntity>{
-        const facebook_alias = 'facebook_user';
+    private async signUpByFacebook(facebookUserId: string, name: string, email: string): Promise<UserEntity>{
+        if(!email){
+            throw new ApplicationException('Email not found.')
+        }
+        await this.validateEmailForSignUp(email);
+
+        let nameArr = name.split(' ');
+        let firstName = (nameArr.length > 0) ? nameArr[0] : "unknown";
+        let lastName = (nameArr.length > 1) ? nameArr[1] : "unknown";
+        let password = this.generateRandomPassword();
+
         let appUser = this.userRepository.create({
-            firstName: facebook_alias,
-            lastName: facebook_alias,
+            firstName: firstName,
+            lastName: lastName,
             facebookUserId: facebookUserId,
-            email: facebook_alias,
+            email: email,
             emailConfirmed: true,
-            role: UserRole.CLIENT
-        })
+            role: UserRole.CLIENT,
+            passwordHash: this.getHashPassowrd(password).toString()
+        });
+        (async () => { 
+            await this.emailService.sendUserPassword(email, `${firstName} ${lastName}`, password)
+        })();
         await this.userRepository.save(appUser);
         return appUser;
     }
 
+    private generateRandomPassword(): string{
+        var randPassword = Array(environment.userGenerationPassword.passwordLength).
+            fill(environment.userGenerationPassword.passwordChars).map((x) => 
+            { return x[Math.floor(Math.random() * x.length)] }).join('');
+        return randPassword;
+    }
 
+    private getHashPassowrd(password: string){
+        return Md5.hashAsciiStr(password)
+    }
 
     private getAccessToken(user: UserEntity): string {
         const accessToken = this.jwtService.sign({
@@ -163,16 +217,10 @@ export class AuthService {
     }
 
     async signUp(model: SignUpAuthModel): Promise<string> {
-        const user = await this.userRepository.findOne({
-            email: model.email
-        })
-        if (user) {
-            throw new ApplicationException('User with such email already exists!')
-        }
-
+        await this.validateEmailForSignUp(model.email)
         let emailToken = this.emailJwtStrategy.create(model.email);
 
-        const passwordHash = Md5.hashAsciiStr(model.password)
+        const passwordHash = this.getHashPassowrd(model.password)
         const newUser = this.userRepository.create({
             email: model.email,
             isActive: true,
@@ -185,13 +233,17 @@ export class AuthService {
         });
         this.userRepository.save(newUser);
 
-        await this.emailService.sendEmail('nodewarehouse@gmail.com',
-            model.email, 'Link for confirm email!',
-            `<br/>
-             Your link for confirm email.
-             <br/>
-             <a href='http://localhost:3001/api/auth/confirm/${newUser.emailConfirmedToken}'>Confirm</a>`);
+        await this.emailService.sendConfirmEmail(newUser.emailConfirmedToken, model.email)
         return "User is registered. Check your email inbox.";
+    }
+
+    private async validateEmailForSignUp(email: string): Promise<any>{
+        const user = await this.userRepository.findOne({
+            email: email
+        })
+        if (user) {
+            throw new ApplicationException('User with such email already exists!')
+        }
     }
 
     async confirmEmail(token: string): Promise<string> {
