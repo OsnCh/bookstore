@@ -1,13 +1,13 @@
 import { ApiBearerAuth, ApiUseTags, ApiOkResponse } from "@nestjs/swagger";
 import { Controller, Post, Body, UseGuards, Get, Param } from "@nestjs/common";
-import { OrderService } from "src/services/order.service";
-import { User } from "src/common/user.decorator";
-import { JwtAuthGuard, Roles } from "src/common";
-import { SaveOrderModel } from "src/models/order/saveOrder.model";
-import { RolesGuard } from "src/common/guards/roles.guard";
-import { UserRole } from "src/entities/user.entity";
-import { GetOrderModel } from "src/models/order/getOrder.model";
-import { OrderStatus } from "src/common/enums/orderStatus.enum";
+import { OrderService } from "services/order.service";
+import { User } from "common/user.decorator";
+import { JwtAuthGuard, Roles } from "common";
+import { SaveOrderModel } from "models/order/saveOrder.model";
+import { RolesGuard } from "common/guards/roles.guard";
+import { UserRole } from "entities/user.entity";
+import { GetOrderModel } from "models/order/getOrder.model";
+import { OrderStatus } from "common/enums/orderStatus.enum";
 
 @ApiBearerAuth()
 @ApiUseTags('Order')

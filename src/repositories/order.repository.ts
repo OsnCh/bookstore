@@ -1,4 +1,4 @@
-import { OrderEntity } from "src/entities/order.entity";
+import { OrderEntity } from "entities/order.entity";
 import { BaseMongoRepository } from "./base.repository";
 import { EntityRepository } from "typeorm";
 

@@ -1,12 +1,12 @@
 import { ApiBearerAuth, ApiUseTags, ApiOkResponse } from "@nestjs/swagger";
 import { Controller, Post, Body, Get, Param, UseGuards, Header } from "@nestjs/common";
-import { AddCategoryModel } from "src/models/category/addCategory.model";
-import { CategoryService } from "src/services/category.service";
-import { GetCategoriesModel } from "src/models/category/getCategories.model";
-import { Roles, JwtAuthGuard } from "src/common";
-import { UserRole } from "src/entities/user.entity";
-import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
-import { RolesGuard } from "src/common/guards/roles.guard";
+import { AddCategoryModel } from "models/category/addCategory.model";
+import { CategoryService } from "services/category.service";
+import { GetCategoriesModel } from "models/category/getCategories.model";
+import { Roles, JwtAuthGuard } from "common";
+import { UserRole } from "entities/user.entity";
+import { UpdateCategoryModel } from "models/category/updateCategory.model";
+import { RolesGuard } from "common/guards/roles.guard";
 
 @ApiBearerAuth()
 @ApiUseTags('Category')

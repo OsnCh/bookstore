@@ -1,1 +1,1 @@
-{"version":3,"file":"tokenAuth.model.js","sourceRoot":"","sources":["../../../src/models/auth/tokenAuth.model.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,6CAAmD;AACnD,MAAa,cAAc;CAK1B;AAHG;IADC,0BAAgB,EAAE;;iDACD;AAElB;IADC,0BAAgB,EAAE;;mDACC;AAJxB,wCAKC"}
+{"version":3,"file":"tokenAuth.model.js","sourceRoot":"","sources":["../../../src/models/auth/tokenAuth.model.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,6CAAmD;AACnD,MAAa,cAAc;CAO1B;AALG;IADC,0BAAgB,EAAE;;iDACD;AAElB;IADC,0BAAgB,EAAE;;mDACC;AAEpB;IADC,0BAAgB,EAAE;;iDACA;AANvB,wCAOC"}

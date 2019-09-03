@@ -1,5 +1,5 @@
 import { BaseMongoRepository } from "./base.repository";
-import { BookEntity } from "src/entities/book.entity";
+import { BookEntity } from "entities/book.entity";
 import { EntityRepository, ObjectID } from "typeorm";
 
 @EntityRepository(BookEntity)

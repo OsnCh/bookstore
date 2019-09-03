@@ -1,18 +1,18 @@
 import { Controller, Body, Post, Get, UseGuards, Param } from '@nestjs/common';
-import { AuthService } from 'src/services/auth.service';
+import { AuthService } from 'services/auth.service';
 import {
   ApiBearerAuth,
   ApiUseTags,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { SignInAuthModel } from 'src/models/auth/signIn.model';
-import { Roles, JwtAuthGuard } from 'src/common';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { UserRole } from 'src/entities/user.entity';
-import { TokenAuthModel } from 'src/models/auth/tokenAuth.model';
-import { SignUpAuthModel } from 'src/models/auth/signUp.model';
-import { UserModel } from 'src/models/auth/user.model';
-import { SignInGoogleModel } from 'src/models/auth/signInGoogle.model';
+import { SignInAuthModel } from 'models/auth/signIn.model';
+import { Roles, JwtAuthGuard } from 'common';
+import { RolesGuard } from 'common/guards/roles.guard';
+import { UserRole } from 'entities/user.entity';
+import { TokenAuthModel } from 'models/auth/tokenAuth.model';
+import { SignUpAuthModel } from 'models/auth/signUp.model';
+import { UserModel } from 'models/auth/user.model';
+import { SignInGoogleModel } from 'models/auth/signInGoogle.model';
 
 @ApiBearerAuth()
 @ApiUseTags('Auth')

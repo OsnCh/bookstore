@@ -20,5 +20,9 @@ __decorate([
     swagger_1.ApiModelProperty(),
     __metadata("design:type", String)
 ], TokenAuthModel.prototype, "accessToken", void 0);
+__decorate([
+    swagger_1.ApiModelProperty(),
+    __metadata("design:type", Boolean)
+], TokenAuthModel.prototype, "isNewUser", void 0);
 exports.TokenAuthModel = TokenAuthModel;
 //# sourceMappingURL=tokenAuth.model.js.map

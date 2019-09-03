@@ -31,10 +31,7 @@ let JwtStrategy = class JwtStrategy extends passport_1.PassportStrategy(passport
     }
     validate(payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield this.authService.signIn(payload);
-            if (!user) {
-                throw new common_1.UnauthorizedException();
-            }
+            const user = yield this.authService.validateUser(payload.email);
             return user;
         });
     }

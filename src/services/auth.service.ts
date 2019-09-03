@@ -1,18 +1,18 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { SignInAuthModel } from 'src/models/auth/signIn.model';
-import { UserEntity, UserRole } from 'src/entities/user.entity';
+import { SignInAuthModel } from 'models/auth/signIn.model';
+import { UserEntity, UserRole } from 'entities/user.entity';
 import { Md5 } from 'ts-md5/dist/md5';
-import { UserRepository } from 'src/repositories/user.repository';
-import { TokenAuthModel } from 'src/models/auth/tokenAuth.model';
-import { SignUpAuthModel } from 'src/models/auth/signUp.model';
-import { UserModel } from 'src/models/auth/user.model';
-import { ApplicationException } from 'src/common/exceptions/application.exception';
+import { UserRepository } from 'repositories/user.repository';
+import { TokenAuthModel } from 'models/auth/tokenAuth.model';
+import { SignUpAuthModel } from 'models/auth/signUp.model';
+import { UserModel } from 'models/auth/user.model';
+import { ApplicationException } from 'common/exceptions/application.exception';
 import { EmailService } from './email.sevice';
-import { EmailJwtStrategy } from 'src/common/email-jwt.strategy';
-import { SignInGoogleModel } from 'src/models/auth/signInGoogle.model';
+import { EmailJwtStrategy } from 'common/email-jwt.strategy';
+import { SignInGoogleModel } from 'models/auth/signInGoogle.model';
 import { Facebook } from 'fb';
-import { environment } from 'src/environments/environment';
+import { environment } from 'environments/environment';
 
 function checkResponseFacebook(response, rejectObj) {
     if (response && !response.error) {

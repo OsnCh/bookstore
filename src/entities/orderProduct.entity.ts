@@ -1,6 +1,6 @@
 import { Entity, Column, ObjectID, ObjectIdColumn } from "typeorm";
 import { EntityBase } from "./base.entity";
-import { ProductType } from "src/common/enums/productType.enum";
+import { ProductType } from "common/enums/productType.enum";
 
 @Entity({name: 'order_products'})
 export class OrderProductEntity extends EntityBase{

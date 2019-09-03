@@ -1,15 +1,15 @@
 import { ApiBearerAuth, ApiUseTags, ApiOkResponse } from "@nestjs/swagger";
 import { Controller, Get, UseGuards, Param, Post, Body } from "@nestjs/common";
-import { MagazineService } from "src/services/magazine.service";
-import { CategoryService } from "src/services/category.service";
-import { User } from "src/common/user.decorator";
-import { JwtAuthGuard, Roles } from "src/common";
-import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
-import { UserRole } from "src/entities/user.entity";
-import { RolesGuard } from "src/common/guards/roles.guard";
-import { AddMagazineModel } from "src/models/magazine/addMagazine.model";
-import { UpdateMagazineModel } from "src/models/magazine/updateMagazine.model";
-import { GetMagazineModel } from "src/models/magazine/getMagazine.model";
+import { MagazineService } from "services/magazine.service";
+import { CategoryService } from "services/category.service";
+import { User } from "common/user.decorator";
+import { JwtAuthGuard, Roles } from "common";
+import { GetMagazinesModel } from "models/magazine/getMagazines.model";
+import { UserRole } from "entities/user.entity";
+import { RolesGuard } from "common/guards/roles.guard";
+import { AddMagazineModel } from "models/magazine/addMagazine.model";
+import { UpdateMagazineModel } from "models/magazine/updateMagazine.model";
+import { GetMagazineModel } from "models/magazine/getMagazine.model";
 
 @ApiBearerAuth()
 @ApiUseTags('Magazine')

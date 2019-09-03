@@ -1,4 +1,4 @@
-import { UserRole, UserEntity } from "src/entities/user.entity";
+import { UserRole, UserEntity } from "entities/user.entity";
 import { ApiModelProperty } from "@nestjs/swagger";
 
 export class UserModel {

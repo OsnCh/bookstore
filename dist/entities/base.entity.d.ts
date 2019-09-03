@@ -1,4 +1,6 @@
-import { ObjectID } from 'typeorm';
-export declare class BaseEntity {
+import { ObjectID, BaseEntity } from 'typeorm';
+export declare class EntityBase extends BaseEntity {
+    constructor();
     id: ObjectID;
+    creationDate: string;
 }

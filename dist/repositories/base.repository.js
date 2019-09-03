@@ -11,13 +11,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 class BaseMongoRepository extends typeorm_1.Repository {
     constructor() {
-        super(...arguments);
+        super();
         this.findBy = (id) => __awaiter(this, void 0, void 0, function* () {
             const result = yield this.findOne(id);
             return result;
         });
         this.findByIds = (ids) => __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.findByIds(ids);
+            const result = new Array();
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                let ent = yield this.findOne(id.toString());
+                if (ent) {
+                    result.push(ent);
+                }
+            }
             return result;
         });
     }

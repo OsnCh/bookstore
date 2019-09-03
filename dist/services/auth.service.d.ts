@@ -1,13 +1,30 @@
 import { JwtService } from '@nestjs/jwt';
-import { TokenAuthModel, SignUpAuthModel } from 'src/models';
-import { SignInAuthModel } from 'src/models/auth/signIn.model';
-import { UserModel } from '../models';
-import { UserRepository } from 'src/repositories/user.repository';
+import { SignInAuthModel } from 'models/auth/signIn.model';
+import { UserEntity } from 'entities/user.entity';
+import { UserRepository } from 'repositories/user.repository';
+import { TokenAuthModel } from 'models/auth/tokenAuth.model';
+import { SignUpAuthModel } from 'models/auth/signUp.model';
+import { UserModel } from 'models/auth/user.model';
+import { EmailService } from './email.sevice';
+import { EmailJwtStrategy } from 'common/email-jwt.strategy';
+import { SignInGoogleModel } from 'models/auth/signInGoogle.model';
 export declare class AuthService {
     private readonly jwtService;
     private readonly userRepository;
-    constructor(jwtService: JwtService, userRepository: UserRepository);
+    private readonly emailService;
+    private readonly emailJwtStrategy;
+    constructor(jwtService: JwtService, userRepository: UserRepository, emailService: EmailService, emailJwtStrategy: EmailJwtStrategy);
     signIn(model: SignInAuthModel): Promise<TokenAuthModel>;
-    signUp(model: SignUpAuthModel): Promise<TokenAuthModel>;
+    signInByGoogle(model: SignInGoogleModel): Promise<TokenAuthModel>;
+    private signUpGoogle;
+    signInFacebook(accessToken: string): Promise<TokenAuthModel>;
+    private signUpByFacebook;
+    private generateRandomPassword;
+    private getHashPassowrd;
+    private getAccessToken;
+    validateUser(email: string): Promise<UserEntity>;
+    signUp(model: SignUpAuthModel): Promise<string>;
+    private validateEmailForSignUp;
+    confirmEmail(token: string): Promise<string>;
     getAll(): Promise<UserModel[]>;
 }

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_entity_1 = require("src/entities/user.entity");
+const user_entity_1 = require("entities/user.entity");
 const swagger_1 = require("@nestjs/swagger");
 class UserModel {
     constructor(entity) {

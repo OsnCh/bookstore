@@ -1,5 +1,5 @@
 import { Repository, ObjectID, DeepPartial } from "typeorm";
-import { EntityBase } from "src/entities/base.entity";
+import { EntityBase } from "entities/base.entity";
 
 export class BaseMongoRepository<TEntity extends EntityBase> extends Repository<TEntity> {
 

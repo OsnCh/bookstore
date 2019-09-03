@@ -1,4 +1,5 @@
-import { UserEntity } from "src/entities";
-import { Repository } from "typeorm/repository/Repository";
-export declare class UserRepository extends Repository<UserEntity> {
+import { BaseMongoRepository } from "./base.repository";
+import { UserEntity } from "entities/user.entity";
+export declare class UserRepository extends BaseMongoRepository<UserEntity> {
+    constructor();
 }

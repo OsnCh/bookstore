@@ -1,5 +1,5 @@
 import { BaseMongoRepository } from "./base.repository";
-import { MagazineEntity } from "src/entities/magazine.entity";
+import { MagazineEntity } from "entities/magazine.entity";
 import { EntityRepository } from "typeorm";
 
 @EntityRepository(MagazineEntity)

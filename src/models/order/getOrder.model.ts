@@ -1,5 +1,5 @@
 import { GetOrderProductModel } from "./getOrderProduct.model";
-import { OrderStatus } from "src/common/enums/orderStatus.enum";
+import { OrderStatus } from "common/enums/orderStatus.enum";
 import { ApiModelProperty } from "@nestjs/swagger";
 
 export class GetOrderModel{

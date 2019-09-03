@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { BookRepository } from "src/repositories/book.repository";
-import { AddBookModel } from "src/models/book/addBook.model";
-import { GetBooksModel } from "src/models/book/getBooks.model";
+import { BookRepository } from "repositories/book.repository";
+import { AddBookModel } from "models/book/addBook.model";
+import { GetBooksModel } from "models/book/getBooks.model";
 import * as Lodash  from 'lodash';
-import { GetBooksItemModel } from "src/models/book/getBooksItem.model";
-import { CategoryRepository } from "src/repositories/category.repository";
-import { UpdateBookModel } from "src/models/book/updateBook.model";
-import { BookEntity } from "src/entities/book.entity";
-import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
-import { ApplicationException } from "src/common/exceptions/application.exception";
-import { GetBookModel } from "src/models/book/getBook.model";
+import { GetBooksItemModel } from "models/book/getBooksItem.model";
+import { CategoryRepository } from "repositories/category.repository";
+import { UpdateBookModel } from "models/book/updateBook.model";
+import { BookEntity } from "entities/book.entity";
+import { GetSelectCategoryModel } from "models/category/getSelectCategory.model";
+import { ApplicationException } from "common/exceptions/application.exception";
+import { GetBookModel } from "models/book/getBook.model";
 
 @Injectable()
 export class BookService{

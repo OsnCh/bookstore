@@ -1,4 +1,4 @@
-import { ProductType } from "src/common/enums/productType.enum";
+import { ProductType } from "common/enums/productType.enum";
 import { GetMagazinesItemModel } from "../magazine/getMagazinesItem.model";
 import { GetBooksItemModel } from "../book/getBooksItem.model";
 import { ApiModelProperty } from "@nestjs/swagger";

@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { MagazineRepository } from "src/repositories/magazine.repository";
-import { AddMagazineModel } from "src/models/magazine/addMagazine.model";
-import { UpdateMagazineModel } from "src/models/magazine/updateMagazine.model";
-import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
+import { MagazineRepository } from "repositories/magazine.repository";
+import { AddMagazineModel } from "models/magazine/addMagazine.model";
+import { UpdateMagazineModel } from "models/magazine/updateMagazine.model";
+import { GetSelectCategoryModel } from "models/category/getSelectCategory.model";
 import * as Lodash  from 'lodash';
-import { GetMagazinesItemModel } from "src/models/magazine/getMagazinesItem.model";
-import { GetMagazinesModel } from "src/models/magazine/getMagazines.model";
-import { MagazineEntity } from "src/entities/magazine.entity";
+import { GetMagazinesItemModel } from "models/magazine/getMagazinesItem.model";
+import { GetMagazinesModel } from "models/magazine/getMagazines.model";
+import { MagazineEntity } from "entities/magazine.entity";
 
 @Injectable()
 export class MagazineService {

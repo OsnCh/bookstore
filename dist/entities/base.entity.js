@@ -10,14 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-let BaseEntity = class BaseEntity {
-};
+class EntityBase extends typeorm_1.BaseEntity {
+    constructor() {
+        super();
+        this.creationDate = new Date(Date.now()).toUTCString();
+    }
+}
 __decorate([
-    typeorm_1.Column('string', { primary: true }),
+    typeorm_1.ObjectIdColumn(),
     __metadata("design:type", typeorm_1.ObjectID)
-], BaseEntity.prototype, "id", void 0);
-BaseEntity = __decorate([
-    typeorm_1.Entity()
-], BaseEntity);
-exports.BaseEntity = BaseEntity;
+], EntityBase.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], EntityBase.prototype, "creationDate", void 0);
+exports.EntityBase = EntityBase;
 //# sourceMappingURL=base.entity.js.map

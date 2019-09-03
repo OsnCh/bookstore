@@ -5,16 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const entities_1 = require("src/entities");
+const base_repository_1 = require("./base.repository");
+const user_entity_1 = require("entities/user.entity");
 const EntityRepository_1 = require("typeorm/decorator/EntityRepository");
-const Repository_1 = require("typeorm/repository/Repository");
-const common_1 = require("@nestjs/common");
-let UserRepository = class UserRepository extends Repository_1.Repository {
+let UserRepository = class UserRepository extends base_repository_1.BaseMongoRepository {
+    constructor() {
+        super();
+    }
 };
 UserRepository = __decorate([
-    common_1.Injectable(),
-    EntityRepository_1.EntityRepository(entities_1.UserEntity)
+    EntityRepository_1.EntityRepository(user_entity_1.UserEntity),
+    __metadata("design:paramtypes", [])
 ], UserRepository);
 exports.UserRepository = UserRepository;
 //# sourceMappingURL=user.repository.js.map

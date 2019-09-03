@@ -15,13 +15,12 @@ const swagger_1 = require("@nestjs/swagger");
 const common_1 = require("./common");
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
-        const app = yield core_1.NestFactory.create(app_module_1.ApplicationModule);
-        const port = process.env.PORT || 3000;
+        const app = yield core_1.NestFactory.create(app_module_1.ApplicationModule, { cors: true });
+        const port = process.env.PORT || 3001;
         const options = new swagger_1.DocumentBuilder()
-            .setTitle('Cats example')
-            .setDescription('The cats API description')
+            .setTitle('Books store')
+            .setDescription('WebAPI for selling books and magazines')
             .setVersion('1.0')
-            .addTag('cats')
             .addBearerAuth()
             .build();
         const document = swagger_1.SwaggerModule.createDocument(app, options);

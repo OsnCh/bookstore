@@ -1,14 +1,14 @@
 import { Injectable, Scope } from "@nestjs/common";
-import { AddCategoryModel } from "src/models/category/addCategory.model";
-import { CategoryRepository } from "src/repositories/category.repository";
-import { GetCategoriesModel } from "src/models/category/getCategories.model";
-import { BookRepository } from "src/repositories/book.repository";
+import { AddCategoryModel } from "models/category/addCategory.model";
+import { CategoryRepository } from "repositories/category.repository";
+import { GetCategoriesModel } from "models/category/getCategories.model";
+import { BookRepository } from "repositories/book.repository";
 import * as Lodash  from 'lodash';
-import { GetCategoriesItemModel } from "src/models/category/getCategoriesItem.model";
-import { CategoryEntity } from "src/entities/category.entity";
-import { UpdateCategoryModel } from "src/models/category/updateCategory.model";
-import { GetSelectCategoryModel } from "src/models/category/getSelectCategory.model";
-import { MagazineRepository } from "src/repositories/magazine.repository";
+import { GetCategoriesItemModel } from "models/category/getCategoriesItem.model";
+import { CategoryEntity } from "entities/category.entity";
+import { UpdateCategoryModel } from "models/category/updateCategory.model";
+import { GetSelectCategoryModel } from "models/category/getSelectCategory.model";
+import { MagazineRepository } from "repositories/magazine.repository";
 
 @Injectable({
     scope: Scope.REQUEST

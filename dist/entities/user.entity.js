@@ -16,7 +16,7 @@ var UserRole;
     UserRole["ADMIN"] = "admin";
     UserRole["CLIENT"] = "user";
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
-let UserEntity = class UserEntity extends base_entity_1.BaseEntity {
+let UserEntity = class UserEntity extends base_entity_1.EntityBase {
 };
 __decorate([
     typeorm_1.Column({ length: 500 }),
@@ -43,6 +43,14 @@ __decorate([
     __metadata("design:type", Boolean)
 ], UserEntity.prototype, "isActive", void 0);
 __decorate([
+    typeorm_1.Column({ default: true }),
+    __metadata("design:type", Boolean)
+], UserEntity.prototype, "isEmailConfirm", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "emailConfirmedToken", void 0);
+__decorate([
     typeorm_1.Column({
         type: "enum",
         enum: UserRole,
@@ -50,8 +58,16 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], UserEntity.prototype, "role", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "googleUserId", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "facebookUserId", void 0);
 UserEntity = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity({ name: "users" })
 ], UserEntity);
 exports.UserEntity = UserEntity;
 //# sourceMappingURL=user.entity.js.map

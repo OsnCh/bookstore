@@ -22,8 +22,8 @@ let RolesGuard = class RolesGuard {
         }
         const request = context.switchToHttp().getRequest();
         const user = request.user;
-        const hasRole = () => user.roles.some((role) => roles.includes(role));
-        return user && user.roles && hasRole();
+        const hasRole = () => roles.includes(user.role);
+        return user && user.role && hasRole();
     }
 };
 RolesGuard = __decorate([

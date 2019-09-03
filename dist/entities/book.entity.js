@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const base_entity_1 = require("./base.entity");
-let BookEntity = class BookEntity extends base_entity_1.BaseEntity {
+let BookEntity = class BookEntity extends base_entity_1.EntityBase {
 };
 __decorate([
     typeorm_1.Column(),
@@ -29,8 +29,12 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], BookEntity.prototype, "isActive", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], BookEntity.prototype, "description", void 0);
 BookEntity = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity({ name: "books" })
 ], BookEntity);
 exports.BookEntity = BookEntity;
 //# sourceMappingURL=book.entity.js.map

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { environment } from "src/environments/environment";
+import { environment } from "environments/environment";
 
 @Injectable()
 export class EmailService{

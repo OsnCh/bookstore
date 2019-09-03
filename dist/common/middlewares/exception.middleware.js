@@ -21,12 +21,19 @@ let ExceptionHandlerFilter = class ExceptionHandlerFilter {
             return response.status(status).send(error.message);
         if (status === common_1.HttpStatus.INTERNAL_SERVER_ERROR) {
             if (process.env.NODE_ENV == environments_1.Environments.Production.toString()) {
+                const logger = require('logzio-nodejs').createLogger({
+                    token: 'NmWSLQCArMEIRiuYUmFlRSpuYOoeRRcb',
+                    type: error.constructor.name
+                });
+                logger.log({
+                    message: error.message,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString(),
+                    path: response.url
+                });
                 console.error(error.stack);
-                return response.status(status).send('Internal Server Error!');
             }
-            else {
-                return response.status(status).send(error.message);
-            }
+            return response.status(status).send((error.message) ? error.message : 'Internal Server Error!');
         }
     }
 };

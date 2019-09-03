@@ -1,4 +1,4 @@
-import { UserRole, UserEntity } from "src/entities/user.entity";
+import { UserRole, UserEntity } from "entities/user.entity";
 export declare class UserModel {
     constructor(entity: UserEntity);
     id: string;

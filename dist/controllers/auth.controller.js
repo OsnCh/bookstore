@@ -21,13 +21,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
-const services_1 = require("../services");
-const models_1 = require("../models");
+const auth_service_1 = require("services/auth.service");
 const swagger_1 = require("@nestjs/swagger");
-const signIn_model_1 = require("src/models/auth/signIn.model");
-const common_2 = require("src/common");
-const roles_guard_1 = require("src/common/guards/roles.guard");
-const entities_1 = require("src/entities");
+const signIn_model_1 = require("models/auth/signIn.model");
+const common_2 = require("common");
+const roles_guard_1 = require("common/guards/roles.guard");
+const user_entity_1 = require("entities/user.entity");
+const tokenAuth_model_1 = require("models/auth/tokenAuth.model");
+const signUp_model_1 = require("models/auth/signUp.model");
+const signInGoogle_model_1 = require("models/auth/signInGoogle.model");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -37,9 +39,19 @@ let AuthController = class AuthController {
             return yield this.authService.signIn(model);
         });
     }
+    signInByGoogle(model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.authService.signInByGoogle(model);
+        });
+    }
+    signInByFacebook(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.authService.signInFacebook(token);
+        });
+    }
     signUp(model) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.authService.signIn(model);
+            return yield this.authService.signUp(model);
         });
     }
     getAll() {
@@ -47,37 +59,66 @@ let AuthController = class AuthController {
             return yield this.authService.getAll();
         });
     }
+    emailConfirm(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.authService.confirmEmail(token);
+        });
+    }
 };
 __decorate([
     common_1.Post('signIn'),
-    swagger_1.ApiOkResponse({ type: models_1.TokenAuthModel }),
+    swagger_1.ApiOkResponse({ type: tokenAuth_model_1.TokenAuthModel }),
     __param(0, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [signIn_model_1.SignInAuthModel]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 __decorate([
-    common_1.Post('signUp'),
-    swagger_1.ApiOkResponse({ type: models_1.TokenAuthModel }),
+    common_1.Post('signIn/google'),
+    swagger_1.ApiOkResponse({ type: tokenAuth_model_1.TokenAuthModel }),
     __param(0, common_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [models_1.SignUpAuthModel]),
+    __metadata("design:paramtypes", [signInGoogle_model_1.SignInGoogleModel]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "signInByGoogle", null);
+__decorate([
+    common_1.Get('signIn/facebook/:token'),
+    swagger_1.ApiOkResponse({ type: tokenAuth_model_1.TokenAuthModel }),
+    __param(0, common_1.Param('token')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "signInByFacebook", null);
+__decorate([
+    common_1.Post('signUp'),
+    swagger_1.ApiOkResponse({ type: tokenAuth_model_1.TokenAuthModel }),
+    __param(0, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [signUp_model_1.SignUpAuthModel]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signUp", null);
 __decorate([
     common_1.Get('users'),
-    common_1.UseGuards(roles_guard_1.RolesGuard),
-    common_2.Roles(entities_1.UserRole.ADMIN),
-    swagger_1.ApiOkResponse({ type: models_1.TokenAuthModel, isArray: true }),
+    common_1.UseGuards(common_2.JwtAuthGuard, roles_guard_1.RolesGuard),
+    common_2.Roles(user_entity_1.UserRole.ADMIN),
+    swagger_1.ApiOkResponse({ type: tokenAuth_model_1.TokenAuthModel, isArray: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "getAll", null);
+__decorate([
+    common_1.Get('confirm/:token'),
+    swagger_1.ApiOkResponse({ type: String }),
+    __param(0, common_1.Param('token')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "emailConfirm", null);
 AuthController = __decorate([
     swagger_1.ApiBearerAuth(),
-    swagger_1.ApiUseTags('auth'),
-    common_1.Controller('auth'),
-    __metadata("design:paramtypes", [services_1.AuthService])
+    swagger_1.ApiUseTags('Auth'),
+    common_1.Controller('api/auth'),
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

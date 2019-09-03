@@ -1,5 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger";
-import { ProductType } from "src/common/enums/productType.enum";
+import { ProductType } from "common/enums/productType.enum";
 
 export class SaveOrderItemModel{
     @ApiModelProperty()
