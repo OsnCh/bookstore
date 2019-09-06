@@ -10,7 +10,7 @@
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "concurrently \"wait-on dist/main.js && nodemon\" \"tsc -w -p tsconfig.json\" ",
     "start:docker": "nodemon --exec \"ts-node\" --cache-directory .tscache src/main.ts --port=3001",
-    "start:staging": "npm run before-start && cross-env PORT=8888 npm run server:staging",
+    "start:staging": "npm run before-start && npm run server:staging",
     "server:staging": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
     "start:prod": "npm run server:prod",
     "server:prod": "node -r ./tsconfig-paths-bootstrap.js dist/main.js"
