@@ -6,7 +6,7 @@ import { ExceptionHandlerFilter } from './common';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, {cors: true});
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3000;
   const options = new DocumentBuilder()
     .setTitle('Books store')
     .setDescription('WebAPI for selling books and magazines')

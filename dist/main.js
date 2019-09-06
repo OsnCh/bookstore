@@ -16,7 +16,7 @@ const common_1 = require("./common");
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         const app = yield core_1.NestFactory.create(app_module_1.ApplicationModule, { cors: true });
-        const port = process.env.PORT || 3001;
+        const port = process.env.PORT || 3000;
         const options = new swagger_1.DocumentBuilder()
             .setTitle('Books store')
             .setDescription('WebAPI for selling books and magazines')
