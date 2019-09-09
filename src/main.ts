@@ -28,6 +28,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
   if(port == "8888"){
+    module.exports = app;
     module.exports.handler = serverless(app);
     return;
   }
