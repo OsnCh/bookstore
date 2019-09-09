@@ -4,4 +4,4 @@
 [context.production]
   command = "npm run before-start && npm run server:staging"
   [context.production.environment]
-  PORT = 8888
+  PORT = "8888"
