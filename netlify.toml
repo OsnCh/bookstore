@@ -1,7 +1,7 @@
 [build]
   command = "npm install && npm run build && node ./tsconfig-paths-bootstrap.js"
 
-[context.deploy.production]
+[context.deploy-preview]
   command = "npm run before-start && npm run server:staging"
-  [context.deploy.production.environment]
+  [context.deploy-preview.environment]
   PORT = "8888"
