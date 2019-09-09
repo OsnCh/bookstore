@@ -27,11 +27,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
-  if(port == "4200"){
-    module.exports = app;
-    module.exports.handler = serverless(app);
-    return;
-  }
+  // if(port == "4200"){
+  //   module.exports = app;
+  //   module.exports.handler = serverless(app);
+  //   return;
+  // }
   await app.listen(port);
 }
 bootstrap();
