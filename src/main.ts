@@ -5,9 +5,18 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ExceptionHandlerFilter } from './common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApplicationModule, {cors: true});
-  const port = process.env.PORT || 3000;
-  console.log(port);
+  const fs = require('fs');
+  const app = await NestFactory.create(ApplicationModule, 
+    {
+      cors: true,
+      // httpsOptions: {
+      //   cert: fs.readFileSync('ca.crt'),
+      //   key: fs.readFileSync('ca.key'),
+      //   requestCert: false,
+      //   rejectUnauthorized: false
+      // }
+    });
+  const port = process.env.PORT || 8888;
   const options = new DocumentBuilder()
     .setTitle('Books store')
     .setDescription('WebAPI for selling books and magazines')
@@ -17,6 +26,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
-  await app.listen(port);
+  await app.listen(port/*, '10.10.0.66'*/);
 }
 bootstrap();
