@@ -16,7 +16,7 @@ async function bootstrap() {
       //   rejectUnauthorized: false
       // }
     });
-  const port = process.env.PORT || 8888;
+  const port = process.env.PORT || 8080;
   const options = new DocumentBuilder()
     .setTitle('Books store')
     .setDescription('WebAPI for selling books and magazines')
@@ -26,6 +26,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
+  if(port == '8888'){
+    const serverless = require('serverless-http');
+    module.exports.handler = serverless(app);
+    return;
+  }
   await app.listen(port/*, '10.10.0.66'*/);
 }
 bootstrap();
