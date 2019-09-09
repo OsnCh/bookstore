@@ -6,6 +6,7 @@ import { ExceptionHandlerFilter } from './common';
 
 async function bootstrap() {
   const fs = require('fs');
+  const serverless = require('serverless-http');
   const app = await NestFactory.create(ApplicationModule, 
     {
       cors: true,
@@ -26,6 +27,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
+  if(port == "8888"){
+    module.exports.handler = serverless(app);
+    return;
+  }
   await app.listen(port);
 }
 bootstrap();
