@@ -5,4 +5,4 @@
 [context.deploy-preview]
   command = "npm run before-start && npm run server:staging"
   [context.deploy-preview.environment]
-  PORT = "8888"
+  PORT = "4200"
