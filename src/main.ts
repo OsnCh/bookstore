@@ -9,12 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, 
     {
       cors: true,
-      httpsOptions: {
-        cert: fs.readFileSync('ca.crt'),
-        key: fs.readFileSync('ca.key'),
-        requestCert: false,
-        rejectUnauthorized: false
-      }
+      // httpsOptions: {
+      //   cert: fs.readFileSync('ca.crt'),
+      //   key: fs.readFileSync('ca.key'),
+      //   requestCert: false,
+      //   rejectUnauthorized: false
+      // }
     });
   const port = process.env.PORT || 8080;
   const options = new DocumentBuilder()
@@ -26,6 +26,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
-  await app.listen(port, '10.10.0.66');
+  await app.listen(port);
 }
 bootstrap();
