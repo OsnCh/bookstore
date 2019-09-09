@@ -1,4 +1,5 @@
 [build]
+  publish = "./dist"
   command = "npm install && npm run build && node ./tsconfig-paths-bootstrap.js"
 
 [context.deploy-preview]
