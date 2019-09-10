@@ -8,14 +8,14 @@
     "build:netlify": "npm run build && node ./tsconfig-paths-bootstrap.js",
     "before-start": "rimraf dist && npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start": "node dist/main.js",
     "start:dev": "concurrently \"wait-on dist/main.js && nodemon\" \"tsc -w -p tsconfig.json\" ",
     "start:docker": "nodemon --exec \"ts-node\" --cache-directory .tscache src/main.ts --port=3001",
     "start:staging": "npm run before-start && npm run server:staging",
     "server:staging": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
     "start:prod": "npm run server:prod",
     "server:prod": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
-    "heroku-postbuild": "npm run start:staging"
+    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "@nestjs/common": "^6.1.1",
