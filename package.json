@@ -14,7 +14,8 @@
     "start:staging": "npm run before-start && npm run server:staging",
     "server:staging": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
     "start:prod": "npm run server:prod",
-    "server:prod": "node -r ./tsconfig-paths-bootstrap.js dist/main.js"
+    "server:prod": "node -r ./tsconfig-paths-bootstrap.js dist/main.js",
+    "heroku-postbuild": "npm run start:staging"
   },
   "dependencies": {
     "@nestjs/common": "^6.1.1",
