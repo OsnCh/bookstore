@@ -49,8 +49,6 @@ export class BookController{
     }
 
     @Post('update')
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN)
     @ApiOkResponse({ type: String })
     async updateBook(@Body() model: UpdateBookModel): Promise<String>{
         return await this.bookService.updateBook(model);
