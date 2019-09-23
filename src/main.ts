@@ -5,17 +5,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ExceptionHandlerFilter } from './common';
 
 async function bootstrap() {
-  const fs = require('fs');
-  const serverless = require('serverless-http');
   const app = await NestFactory.create(ApplicationModule, 
     {
-      cors: true,
-      // httpsOptions: {
-      //   cert: fs.readFileSync('ca.crt'),
-      //   key: fs.readFileSync('ca.key'),
-      //   requestCert: false,
-      //   rejectUnauthorized: false
-      // }
+      cors: true
     });
   const port = process.env.PORT || 8080;
   const options = new DocumentBuilder()
@@ -27,11 +19,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new ExceptionHandlerFilter())
-  // if(port == "4200"){
-  //   module.exports = app;
-  //   module.exports.handler = serverless(app);
-  //   return;
-  // }
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port);
 }
 bootstrap();
